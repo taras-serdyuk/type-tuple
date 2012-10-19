@@ -2,10 +2,10 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 
-module Type.List.Tuple (
+module Type.Tuple.Tuple (
     Tuple, ListTuple, tuple, list, List0, List1, List2, List3, List4) where
 
-import Type.List.Base
+import Type.Tuple.Base
 
 
 data Tuple a

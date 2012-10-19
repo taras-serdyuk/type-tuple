@@ -4,13 +4,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Type.List.Func.Basic (
+module Type.Tuple.Func.Basic (
     Head, head,
     Tail, tail,
     Append, append
     ) where
 
-import Type.List.Base
+import Type.Tuple.Base
 
 
 class (List a) => Head a b | a -> b where

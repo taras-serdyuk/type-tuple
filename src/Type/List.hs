@@ -5,6 +5,6 @@ module Type.List (
     module Basic
     ) where
 
-import Type.List.Base as Base
-import Type.List.Tuple as Tuple
-import Type.List.Func.Basic as Basic
+import Type.Tuple.Base as Base
+import Type.Tuple.Tuple as Tuple
+import Type.Tuple.Func.Basic as Basic

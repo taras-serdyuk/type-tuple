@@ -11,10 +11,6 @@ library
   hs-source-dirs:  src
   build-depends:   base >= 4
   ghc-options:     -Wall
-  other-modules:   
-                   Type.List.Base,
-                   Type.List.Tuple,
-                   Test,
-                   Type.List.Func.Basic
+  other-modules:   Test
   exposed-modules: Type.List
 

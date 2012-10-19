@@ -1,6 +1,6 @@
 {-# LANGUAGE EmptyDataDecls #-}
 
-module Type.List.Base (
+module Type.Tuple.Base (
     Nil, Cons, List, nop) where
 
 
