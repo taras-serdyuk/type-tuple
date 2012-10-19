@@ -1,0 +1,14 @@
+name:           type-list
+version:        0.1
+cabal-version:  >= 1.2
+build-type:     Simple
+author:         Taras Serdyuk
+stability:      experimental
+synopsis:       Haskell list-like type arithmetic
+homepage:       https://github.com/taras-serdyuk/type-list
+
+library
+  hs-source-dirs:  src
+  build-depends:   base >= 4
+  ghc-options:     -Wall
+
