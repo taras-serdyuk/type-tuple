@@ -1,5 +1,5 @@
 
-module Type.List (
+module Type.Tuple (
     module Base,
     module Tuple,
     module Basic

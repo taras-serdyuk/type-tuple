@@ -1,4 +1,4 @@
 
 module Test where
 
-import Type.List
+import Type.Tuple
