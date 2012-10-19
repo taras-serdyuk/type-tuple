@@ -2,13 +2,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 
-module Type.List.Tuple where
+module Type.List.Tuple (
+    Tuple, ListTuple, tuple, list, List0, List1, List2, List3, List4) where
 
 import Type.List.Base
 
 
 data Tuple a
 
+-- TODO: move to separate module
 type List0 = Nil
 type List1 a = Cons a List0
 type List2 a b = Cons a (List1 b)
@@ -22,11 +24,11 @@ type List9 a b c d e f g h i = Cons a (List8 b c d e f g h i)
 
 
 class (List a) => ListTuple a b | a -> b, b -> a where
-    fromTuple :: a -> b
-    toTuple :: b -> a
+    tuple :: a -> b
+    list :: b -> a
     
-    fromTuple = nop
-    toTuple = nop
+    tuple = nop
+    list = nop
 
 instance ListTuple List0 ()
 instance ListTuple (List1 a) (Tuple a)
