@@ -9,8 +9,8 @@ homepage:       https://github.com/taras-serdyuk/type-tuple
 
 library
   hs-source-dirs:  
-                   spec, 
-                   src
+                   src,
+                   test
   build-depends:   
                    base >= 4,
                    QuickCheck
