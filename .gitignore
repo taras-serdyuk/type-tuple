@@ -1,4 +1,5 @@
 .dist-buildwrapper
+SourceGraph
 dist
 cabal-dev
 *.o
