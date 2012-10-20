@@ -12,8 +12,7 @@ library
                    src,
                    test
   build-depends:   
-                   base >= 4,
-                   QuickCheck
+                   base >= 4
   ghc-options:     -Wall
   other-modules:   
                    Test,

@@ -1,17 +1,37 @@
 
 module Type.Tuple.Test.Basic where
 
+import Data.List as L
 import Type.Tuple.Test.Base
-import Type.Tuple.Test.Dummy as D
 
 
-propAppend :: (D.Append a b c) => Type a -> Type b -> Bool
-propAppend (Type x x') (Type y y') = render (D.append x y) == (x' ++ y')
+
+appendTest = test $ do
+    x <- types; y <- types
+    Actual (fun2 "D.append" x y) `vs` Expected (x ++ y)
+
+headTest = test $ do
+    x <- filter (not . null) types
+    Actual (fun1 "D.head" x) `vs` Expected [head x]
+
+headFail = test [fun1 "D.head" ""]
 
 
-propHead :: (Head a b) => Type a -> Bool
-propHead (Type x x') = renderMaybe (D.head x) == headMaybe x'
+types = ["", "A", "B", "AA", "AB", "BB", "AAA"]
 
-headMaybe :: [a] -> Maybe a
-headMaybe [] = Nothing
-headMaybe (x:_) = Just x
+data Result = Actual String | Expected String
+type Tup = String
+
+fun1 :: String -> Tup -> String
+fun1 fun x = fun ++ " " ++ lift x
+
+fun2 :: String -> Tup -> Tup -> String
+fun2 fun x y = fun1 fun x ++ " " ++ lift y
+
+
+vs :: Result -> Result -> [String]
+vs (Actual x) (Expected y) = ["check (" ++ x ++ ") :: " ++ lift y]
+
+test :: [String] -> String
+test = unlines . intersperse "$"
+
