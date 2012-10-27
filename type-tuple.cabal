@@ -8,15 +8,15 @@ synopsis:       Haskell list-like type arithmetic on phantom tuples
 homepage:       https://github.com/taras-serdyuk/type-tuple
 
 library
-  hs-source-dirs:  
-                   src,
+  hs-source-dirs:  src,
                    test
   build-depends:   
-                   base >= 4
+                   base >= 4,
+                   hint
   ghc-options:     -Wall
   other-modules:   
+                   Type.Tuple.Tuple,
+                   Type.Tuple.List,
                    Test,
-                   Type.Tuple.Test.Base,
-                   Type.Tuple.Test.Basic,
-                   Type.Tuple.Test.Dummy
+                   Types
 
