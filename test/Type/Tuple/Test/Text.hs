@@ -15,3 +15,6 @@ space3 x y z = x .- y .- z
 
 (.-) :: String3
 x .- y = x ++ " " ++ y
+
+(.|) :: String3
+x .| y = x ++ "\n" ++ y
