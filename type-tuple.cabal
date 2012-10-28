@@ -18,5 +18,7 @@ library
                    Type.Tuple.Tuple,
                    Type.Tuple.List,
                    Test,
-                   Types
+                   Types,
+                   Type.Tuple.Test.Text,
+                   Type.Tuple.Test.Signature
 

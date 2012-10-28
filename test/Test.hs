@@ -3,6 +3,8 @@ module Test where
 
 import Control.Monad
 import Language.Haskell.Interpreter hiding (parens)
+import Type.Tuple.Test.Signature
+import Type.Tuple.Test.Text
 
 
 main :: IO ()
@@ -18,15 +20,10 @@ tests = do
 
 check :: (Functor m, MonadInterpreter m) => String -> String -> String -> m ()
 check cl a b = do
-    let func = phantom $ constr cl "a" "b" .=> "a" .-> "b"
+    let func = phantom $ classFunc 2 cl
     let expr = func .- phantom a .:: b
     correct <- typeChecks expr
     unless correct (evalPhantom expr)
-
-
-type String2 = String -> String
-type String3 = String -> String2
-type String4 = String -> String3
 
 
 evalPhantom :: (Functor m, MonadInterpreter m) => String -> m ()
@@ -34,25 +31,3 @@ evalPhantom expr = void . eval $ "const ()" .- parens expr
 
 phantom :: String2
 phantom a = parens $ "undefined" .:: a
-
-
-(.::) :: String3
-x .:: y = join3 x "::" y
-
-(.=>) :: String3
-x .=> y = join3 x "=>" y
-
-(.->) :: String3
-x .-> y = join3 x "->" y
-
-constr :: String4
-constr cl a b = parens (join3 cl a b)
-
-parens :: String2
-parens s = '(' : s ++ ")"
-
-join3 :: String4
-join3 x y z = x .- y .- z
-
-(.-) :: String3
-x .- y = x ++ " " ++ y
