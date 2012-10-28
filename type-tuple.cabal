@@ -20,5 +20,5 @@ library
                    Test,
                    Types,
                    Type.Tuple.Test.Text,
-                   Type.Tuple.Test.Signature
+                   Type.Tuple.Test.Phantom
 

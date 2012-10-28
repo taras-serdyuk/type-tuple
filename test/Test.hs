@@ -3,8 +3,7 @@ module Test where
 
 import Control.Monad
 import Language.Haskell.Interpreter hiding (parens)
-import Type.Tuple.Test.Signature
-import Type.Tuple.Test.Text
+import Type.Tuple.Test.Phantom
 
 
 main :: IO ()
@@ -13,21 +12,19 @@ main = runInterpreter tests >>= print
 
 tests :: Interpreter ()
 tests = do
-    loadModules ["Types.hs", "../src/Type/Tuple/List.hs", "../src/Type/Tuple/Tuple.hs"]
+    let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
+    loadModules ["Types.hs", src "List", src "Tuple"]
     setImports ["Prelude", "Types", "Type.Tuple.Tuple"]
-    check "Head" "(A, B)" "B"
-    check "Head" "()" "A"
+    
+    check2 "Head" "(A, B)" "A"
+    check2 "Head" "()" "A"
 
-check :: (Functor m, MonadInterpreter m) => String -> String -> String -> m ()
-check cl a b = do
-    let func = phantom $ classFunc 2 cl
-    let expr = func .- phantom a .:: b
+
+check2 :: (Functor m, MonadInterpreter m) => String -> String -> String -> m ()
+check2 cl a = check cl [a]
+
+check :: (Functor m, MonadInterpreter m) => String -> [String] -> String -> m ()
+check cl pars res = do
+    let expr = applyClass cl pars res
     correct <- typeChecks expr
-    unless correct (evalPhantom expr)
-
-
-evalPhantom :: (Functor m, MonadInterpreter m) => String -> m ()
-evalPhantom expr = void . eval $ "const ()" .- parens expr
-
-phantom :: String2
-phantom a = parens $ "undefined" .:: a
+    unless correct (void . eval . showPhantom $ expr)

@@ -10,8 +10,8 @@ type String4 = String -> String3
 parens :: String2
 parens s = '(' : s ++ ")"
 
-words3 :: String4
-words3 x y z = x .- y .- z
+space3 :: String4
+space3 x y z = x .- y .- z
 
 (.-) :: String3
 x .- y = x ++ " " ++ y
