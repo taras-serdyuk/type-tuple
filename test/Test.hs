@@ -13,11 +13,14 @@ main = runInterpreter tests >>= putStrLn . result where
 
 tests :: Interpreter ()
 tests = do
+    let test m = "Type/Tuple/Test/" ++ m ++ ".hs"
     let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
-    loadModules ["Types.hs", src "List", src "Tuple"]
-    setImports ["Prelude", "Types", "Type.Tuple.Tuple"]
+    loadModules [test "Types", src "List", src "Tuple"]
+    setImports [
+        "Prelude",
+        "Type.Tuple.Tuple",
+        "Type.Tuple.Test.Types"]
     
     valid $ interpInst "Head" ["(A, B)"] "A"
     invalid $ interpInst "Head" ["(A, B)"] "A"
     invalid $ interpInst "Head" ["()"] "A"
-    return ()

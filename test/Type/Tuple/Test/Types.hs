@@ -1,6 +1,7 @@
 {-# LANGUAGE EmptyDataDecls #-}
 
-module Types where
+module Type.Tuple.Test.Types where
+
 
 data A
 data B
