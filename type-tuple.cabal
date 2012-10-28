@@ -12,7 +12,8 @@ library
                    test
   build-depends:   
                    base >= 4,
-                   hint
+                   hint,
+                   mtl
   ghc-options:     -Wall
   other-modules:   
                    Type.Tuple.Tuple,
