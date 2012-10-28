@@ -4,8 +4,8 @@ module Type.Tuple.Test.Phantom where
 import Type.Tuple.Test.Text
 
 
-showPhantom :: String -> String
-showPhantom expr = "const ()" .- parens expr
+truePhantom :: String -> String
+truePhantom expr = "const True" .- parens expr
 
 applyClass :: String -> [String] -> String2
 applyClass cl pars res = unwords (func : map phantom pars) .:: res
