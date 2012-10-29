@@ -37,6 +37,10 @@ tests = do
     
     invalid $ interpInst "Init" ["()"] "a"
     inputs >>= valids "Init" (tuple . init)
+    
+    valid $ interpInst "Append" ["()", "()"] "()"
+    valid $ interpInst "Append" ["()", "Only A"] "Only A"
+    valid $ interpInst "Append" ["Only A", "()"] "Only A"
 
 
 valids :: (Functor m, MonadInterpreter m) => String -> String2 -> [String] -> m ()

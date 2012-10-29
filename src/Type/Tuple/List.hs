@@ -41,3 +41,7 @@ instance (Last b c) => Last (Cons a b) c
 class Init a b | a -> b
 instance Init (Cons a Nil) Nil
 instance (Init (Cons b c) d) => Init (Cons a (Cons b c)) (Cons a d)
+
+class Append a b c | a b -> c
+instance Append Nil a a
+instance (Append b c d) => Append (Cons a b) c (Cons a d)
