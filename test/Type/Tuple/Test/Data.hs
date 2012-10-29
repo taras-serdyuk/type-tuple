@@ -15,6 +15,9 @@ tuple [x] = parens ("Only" .- [x])
 tuple xs = parens (intersperse ',' xs)
 
 
+inputsGen :: Int -> Gen [String]
+inputsGen n = vectorOf n (listOf $ elements types)
+
 inputsGen1 :: Int -> Gen [String]
 inputsGen1 n = vectorOf n (listOf1 $ elements types)
 
