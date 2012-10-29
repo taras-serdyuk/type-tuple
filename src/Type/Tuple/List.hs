@@ -20,6 +20,7 @@ type List6 a b c d e f = Cons a (List5 b c d e f)
 type List7 a b c d e f g = Cons a (List6 b c d e f g)
 type List8 a b c d e f g h = Cons a (List7 b c d e f g h)
 type List9 a b c d e f g h i = Cons a (List8 b c d e f g h i)
+type List10 a b c d e f g h i j = Cons a (List9 b c d e f g h i j)
 
 
 class List a

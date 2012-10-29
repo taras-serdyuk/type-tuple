@@ -22,6 +22,7 @@ instance TupleList (a, b, c, d, e, f) (L.List6 a b c d e f)
 instance TupleList (a, b, c, d, e, f, g) (L.List7 a b c d e f g)
 instance TupleList (a, b, c, d, e, f, g, h) (L.List8 a b c d e f g h)
 instance TupleList (a, b, c, d, e, f, g, h, i) (L.List9 a b c d e f g h i)
+instance TupleList (a, b, c, d, e, f, g, h, i, j) (L.List10 a b c d e f g h i j)
 
 
 class Head a b | a -> b

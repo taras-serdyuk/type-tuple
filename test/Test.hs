@@ -23,20 +23,21 @@ tests = do
         "Type.Tuple.Tuple",
         "Type.Tuple.Test.Types"]
     
+    
+    let inputs = liftIO . applyGen 10 $ inputsGen1 100
+    
     invalid $ interpInst "Head" ["()"] "a"
-    valids "Head" tail (return . head)
+    inputs >>= valids "Head" (return . head)
     
     invalid $ interpInst "Tail" ["()"] "a"
-    valids "Tail" tail (tuple . tail)
+    inputs >>= valids "Tail" (tuple . tail)
     
     invalid $ interpInst "Last" ["()"] "a"
-    valids "Last" tail (return . last)
+    inputs >>= valids "Last" (return . last)
     
     invalid $ interpInst "Init" ["()"] "a"
-    valids "Init" tail (tuple . init)
+    inputs >>= valids "Init" (tuple . init)
 
 
-valids :: (Functor m, MonadInterpreter m) => String -> ([String] -> [String]) -> String2 -> m ()
-valids cl filt et = mapM_ test (filt inputs) where
-    test xs = valid $ interpInst cl [tuple xs] (et xs)
-    inputs = variantsTill 5
+valids :: (Functor m, MonadInterpreter m) => String -> String2 -> [String] -> m ()
+valids cl et = mapM_ (\xs -> valid $ interpInst cl [tuple xs] (et xs))

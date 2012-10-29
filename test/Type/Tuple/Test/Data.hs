@@ -1,7 +1,10 @@
 
 module Type.Tuple.Test.Data where
 
+import Control.Monad
 import Data.List
+import System.Random
+import Test.QuickCheck.Gen
 import Type.Tuple.Test.Text
 import Type.Tuple.Test.Types
 
@@ -12,10 +15,8 @@ tuple [x] = parens ("Only" .- [x])
 tuple xs = parens (intersperse ',' xs)
 
 
-variantsTill :: Int -> [String]
-variantsTill n = concatMap variants [0 .. n]
+inputsGen1 :: Int -> Gen [String]
+inputsGen1 n = vectorOf n (listOf1 $ elements types)
 
-variants :: Int -> [String]
-variants 0 = [""]
-variants n = [x:xs | x <- types, xs <- prev]
-    where prev = variants (n - 1)
+applyGen :: Int -> Gen a -> IO a
+applyGen size gen = liftM (flip (unGen gen) size) newStdGen
