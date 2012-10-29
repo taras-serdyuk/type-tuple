@@ -28,6 +28,9 @@ tests = do
     
     invalid $ interpInst "Tail" ["()"] "a"
     valids "Tail" tail (tuple . tail)
+    
+    invalid $ interpInst "Last" ["()"] "a"
+    valids "Last" tail (return . last)
 
 
 valids :: (Functor m, MonadInterpreter m) => String -> ([String] -> [String]) -> String2 -> m ()

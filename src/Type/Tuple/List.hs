@@ -1,6 +1,8 @@
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE OverlappingInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Type.Tuple.List where
 
@@ -30,3 +32,7 @@ instance Head (Cons a b) a
 
 class Tail a b | a -> b
 instance Tail (Cons a b) b
+
+class Last a b | a -> b
+instance Last (Cons a Nil) a
+instance (Last b c) => Last (Cons a b) c

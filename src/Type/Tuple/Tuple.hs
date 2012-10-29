@@ -29,3 +29,6 @@ instance (TupleList a a', L.Head a' b) => Head a b
 
 class Tail a b | a -> b
 instance (TupleList a a', TupleList b b', L.Tail a' b') => Tail a b
+
+class Last a b | a -> b
+instance (TupleList a a', L.Last a' b) => Last a b
