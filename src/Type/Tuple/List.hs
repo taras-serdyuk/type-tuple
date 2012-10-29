@@ -36,3 +36,7 @@ instance Tail (Cons a b) b
 class Last a b | a -> b
 instance Last (Cons a Nil) a
 instance (Last b c) => Last (Cons a b) c
+
+class Init a b | a -> b
+instance Init (Cons a Nil) Nil
+instance (Init (Cons b c) d) => Init (Cons a (Cons b c)) (Cons a d)
