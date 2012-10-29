@@ -22,5 +22,6 @@ library
                    Type.Tuple.Test.Text,
                    Type.Tuple.Test.Phantom,
                    Type.Tuple.Test.Interpreter,
-                   Type.Tuple.Test.Types
+                   Type.Tuple.Test.Types,
+                   Type.Tuple.Test.Data
 

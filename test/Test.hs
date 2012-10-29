@@ -2,7 +2,9 @@
 module Test where
 
 import Language.Haskell.Interpreter
+import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
+import Type.Tuple.Test.Text
 
 
 main :: IO ()
@@ -21,6 +23,14 @@ tests = do
         "Type.Tuple.Tuple",
         "Type.Tuple.Test.Types"]
     
-    valid $ interpInst "Head" ["(A, B)"] "A"
-    invalid $ interpInst "Head" ["(A, B)"] "A"
-    invalid $ interpInst "Head" ["()"] "A"
+    invalid $ interpInst "Head" ["()"] "a"
+    valids "Head" tail (return . head)
+    
+    invalid $ interpInst "Tail" ["()"] "a"
+    valids "Tail" tail (tuple . tail)
+
+
+valids :: (Functor m, MonadInterpreter m) => String -> ([String] -> [String]) -> String2 -> m ()
+valids cl filt et = mapM_ test (filt inputs) where
+    test xs = valid $ interpInst cl [tuple xs] (et xs)
+    inputs = variantsTill 5

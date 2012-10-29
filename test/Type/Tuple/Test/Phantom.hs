@@ -4,7 +4,7 @@ module Type.Tuple.Test.Phantom where
 import Type.Tuple.Test.Text
 
 
-truePhantom :: String -> String
+truePhantom :: String2
 truePhantom expr = "const True" .- parens expr
 
 applyClass :: String -> [String] -> String2
