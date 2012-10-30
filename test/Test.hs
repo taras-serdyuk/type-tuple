@@ -1,12 +1,10 @@
 
 module Test where
 
-import Control.Monad
 import Language.Haskell.Interpreter
-import Type.Tuple.Test.Data
-import Type.Tuple.Test.Interpreter
+import Type.Tuple.Test.Data -- TODO: delete
+import Type.Tuple.Test.Interpreter -- TODO: delete
 import Type.Tuple.Test.Test
-import Type.Tuple.Test.Text
 
 
 main :: IO ()
@@ -19,6 +17,7 @@ tests :: Interpreter ()
 tests = do
     let test m = "Type/Tuple/Test/" ++ m ++ ".hs"
     let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
+    
     loadModules [test "Types", src "Nat", src "List", src "Tuple"]
     setImports [
         "Prelude",
@@ -27,31 +26,20 @@ tests = do
         "Type.Tuple.Test.Types"]
     
     
-    let inputsHalf = liftIO . applyGen 5 $ inputsGen 100
-    let inputs1 = liftIO . applyGen 10 $ inputsGen1 100
-    let inputs = liftIO . applyGen 10 $ inputsGen 100
-    
     no "Head () a"
-    valids "Head" (return . head) inputs1
-    --eq 100 "Head" (return . head) `for1` list'
+    eq 50 "Head" (return . head) `for1` list'
     
-    invalid $ interpInst "Tail" ["()"] "a"
-    valids "Tail" (tuple . tail) inputs1
+    no "Tail () a"
+    eq 50 "Tail" (tuple . tail) `for1` list'
     
-    invalid $ interpInst "Last" ["()"] "a"
-    valids "Last" (return . last) inputs1
+    no "Last () a"
+    eq 50 "Last" (return . last) `for1` list'
     
-    invalid $ interpInst "Init" ["()"] "a"
-    valids "Init" (tuple . init) inputs1
+    no "Init () a"
+    eq 50 "Init" (tuple . init) `for1` list'
     
     is "Append () () ()"
-    inputsHalf >>= \xs -> inputsHalf >>= valids2 "Append" (\x y -> tuple (x ++ y)) xs
+    eq 200 "Append" (\x y -> tuple (x ++ y)) `for2` (list2, list2)
     
     is "Length () Zero"
-    valids "Length" (("Nat" ++) . show . length) inputs
-
-valids :: (Functor m, MonadInterpreter m) => String -> String2 -> m [String] -> m ()
-valids cl et xsm = xsm >>= mapM_ (\x -> valid $ interpInst cl [tuple x] (et x))
-
-valids2 :: (Functor m, MonadInterpreter m) => String -> String3 -> [String] -> [String] -> m ()
-valids2 cl et = zipWithM_ (\x y -> valid $ interpInst cl [tuple x, tuple y] (et x y))
+    eq 10 "Length" (("Nat" ++) . show . length) `for1` list
