@@ -27,19 +27,19 @@ tests = do
     
     
     no "Head () a"
-    eq 50 "Head" (return . head) `for1` list'
+    eq 50 "Head" head `for1` list'
     
     no "Tail () a"
-    eq 50 "Tail" (tuple . tail) `for1` list'
+    eq 50 "Tail" tail `for1` list'
     
     no "Last () a"
-    eq 50 "Last" (return . last) `for1` list'
+    eq 50 "Last" last `for1` list'
     
     no "Init () a"
-    eq 50 "Init" (tuple . init) `for1` list'
+    eq 50 "Init" init `for1` list'
     
     is "Append () () ()"
-    eq 200 "Append" (\x y -> tuple (x ++ y)) `for2` (list2, list2)
+    eq 200 "Append" (++) `for2` (list2, list2)
     
     is "Length () Zero"
-    eq 20 "Length" (("Nat" ++) . show . length) `for1` list
+    eq 20 "Length" length `for1` list

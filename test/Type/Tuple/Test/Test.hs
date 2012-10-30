@@ -10,12 +10,6 @@ import Language.Haskell.Interpreter
 import Test.QuickCheck.Gen
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
-import Type.Tuple.Test.Text
-
-
-type Class = String
-type Type = String
-type GenT = (Int -> Gen [Type], Int)
 
 
 is, no :: (Functor m, MonadInterpreter m) => String -> m ()
@@ -23,6 +17,7 @@ is, no :: (Functor m, MonadInterpreter m) => String -> m ()
 is = valid . feedInst interpInst
 no = invalid . feedInst interpInst
 
+-- TODO: refactor
 feedInst :: (Class -> [Type] -> Type -> a) -> String -> a
 feedInst f inst = f cl pars res where
     (cl : rest) = words inst
@@ -30,28 +25,19 @@ feedInst f inst = f cl pars res where
 
 
 -- TODO: convert to class For
-for1 :: (Functor m, MonadInterpreter m) => (Int, Class, Type -> Type) -> GenT -> m ()
-for1 (n, cl, et) (gen, l) = valids cl et (liftIO . applyGen l $ gen n)
+for1 :: (RenderType r, Functor m, MonadInterpreter m) => (Int, Class, Type -> r) -> GenT -> m ()
+for1 (n, cl, et) (gen, l) = mapM_ (\x -> valid $ interpInst cl [renderType x] (renderType $ et x)) =<< typesGen l n gen
 
-for2 :: (Functor m, MonadInterpreter m) => (Int, Class, Type -> Type -> Type) -> (GenT, GenT) -> m ()
-for2 (n, cl, et) ((xGen, xl), (yGen, yl)) = valids2 cl et (liftIO . applyGen xl $ xGen n) (liftIO . applyGen yl $ yGen n)
+for2 :: (RenderType r, Functor m, MonadInterpreter m) => (Int, Class, Type -> Type -> r) -> (GenT, GenT) -> m ()
+for2 (n, cl, et) ((xGen, xl), (yGen, yl)) = valids2 cl et (typesGen xl n xGen) (typesGen yl n yGen)
+
+typesGen :: (MonadIO m) => Int -> Int -> Gen a -> m [a]
+typesGen l n = liftIO . applyGen l . vectorOf n
 
 eq :: Int -> Class -> a -> (Int, Class, a)
 eq n cl et = (n, cl, et)
 
 
-list :: GenT
-list = (inputsGen, 20)
-
-list' :: GenT
-list' = (inputsGen1, 20)
-
-list2 :: GenT
-list2 = (inputsGen, 10)
-
-
-valids :: (Functor m, MonadInterpreter m) => String -> String2 -> m [String] -> m ()
-valids cl et xsm = xsm >>= mapM_ (\x -> valid $ interpInst cl [tuple x] (et x))
-
-valids2 :: (Functor m, MonadInterpreter m) => String -> String3 -> m [String] -> m [String] -> m ()
-valids2 cl et xsm ysm = xsm >>= \xs -> ysm >>= zipWithM_ (\x y -> valid $ interpInst cl [tuple x, tuple y] (et x y)) xs
+-- TODO: delete
+valids2 :: (RenderType r, Functor m, MonadInterpreter m) => String -> (Type -> Type -> r) -> m [String] -> m [String] -> m ()
+valids2 cl et xsm ysm = xsm >>= \xs -> ysm >>= zipWithM_ (\x y -> valid $ interpInst cl [renderType x, renderType y] (renderType $ et x y)) xs
