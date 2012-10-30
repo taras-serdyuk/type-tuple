@@ -23,6 +23,16 @@ instance TupleList (a, b, c, d, e, f, g) (L.List7 a b c d e f g)
 instance TupleList (a, b, c, d, e, f, g, h) (L.List8 a b c d e f g h)
 instance TupleList (a, b, c, d, e, f, g, h, i) (L.List9 a b c d e f g h i)
 instance TupleList (a, b, c, d, e, f, g, h, i, j) (L.List10 a b c d e f g h i j)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k) (L.List11 a b c d e f g h i j k)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l) (L.List12 a b c d e f g h i j k l)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m) (L.List13 a b c d e f g h i j k l m)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n) (L.List14 a b c d e f g h i j k l m n)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) (L.List15 a b c d e f g h i j k l m n o)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) (L.List16 a b c d e f g h i j k l m n o p)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) (L.List17 a b c d e f g h i j k l m n o p q)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) (L.List18 a b c d e f g h i j k l m n o p q r)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) (L.List19 a b c d e f g h i j k l m n o p q r s)
+instance TupleList (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) (L.List20 a b c d e f g h i j k l m n o p q r s t)
 
 
 class Head a b | a -> b

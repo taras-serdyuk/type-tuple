@@ -1,5 +1,6 @@
 
 module Type.Tuple.Test.Data where
+-- TODO: legacy
 
 import Control.Monad
 import Data.List

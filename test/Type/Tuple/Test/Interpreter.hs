@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module Type.Tuple.Test.Interpreter where
+-- TODO: legacy
 
 import Control.Monad.Error
 import Language.Haskell.Interpreter

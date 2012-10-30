@@ -3,6 +3,7 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Type.Tuple.Test.Test where
+-- TODO: separate data generation, testing DSL and Interpreter API
 
 import Control.Monad
 import Language.Haskell.Interpreter
@@ -10,8 +11,6 @@ import Test.QuickCheck.Gen
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
 import Type.Tuple.Test.Text
-
--- TODO: separate data generation, testing DSL and Interpreter API
 
 
 type Class = String
@@ -42,13 +41,13 @@ eq n cl et = (n, cl, et)
 
 
 list :: GenT
-list = (inputsGen, 10)
+list = (inputsGen, 20)
 
 list' :: GenT
-list' = (inputsGen1, 10)
+list' = (inputsGen1, 20)
 
 list2 :: GenT
-list2 = (inputsGen, 5)
+list2 = (inputsGen, 10)
 
 
 valids :: (Functor m, MonadInterpreter m) => String -> String2 -> m [String] -> m ()

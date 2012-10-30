@@ -42,4 +42,4 @@ tests = do
     eq 200 "Append" (\x y -> tuple (x ++ y)) `for2` (list2, list2)
     
     is "Length () Zero"
-    eq 10 "Length" (("Nat" ++) . show . length) `for1` list
+    eq 20 "Length" (("Nat" ++) . show . length) `for1` list

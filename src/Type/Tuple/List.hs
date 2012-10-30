@@ -23,6 +23,16 @@ type List7 a b c d e f g = Cons a (List6 b c d e f g)
 type List8 a b c d e f g h = Cons a (List7 b c d e f g h)
 type List9 a b c d e f g h i = Cons a (List8 b c d e f g h i)
 type List10 a b c d e f g h i j = Cons a (List9 b c d e f g h i j)
+type List11 a b c d e f g h i j k = Cons a (List10 b c d e f g h i j k)
+type List12 a b c d e f g h i j k l = Cons a (List11 b c d e f g h i j k l)
+type List13 a b c d e f g h i j k l m = Cons a (List12 b c d e f g h i j k l m)
+type List14 a b c d e f g h i j k l m n = Cons a (List13 b c d e f g h i j k l m n)
+type List15 a b c d e f g h i j k l m n o = Cons a (List14 b c d e f g h i j k l m n o)
+type List16 a b c d e f g h i j k l m n o p = Cons a (List15 b c d e f g h i j k l m n o p)
+type List17 a b c d e f g h i j k l m n o p q = Cons a (List16 b c d e f g h i j k l m n o p q)
+type List18 a b c d e f g h i j k l m n o p q r = Cons a (List17 b c d e f g h i j k l m n o p q r)
+type List19 a b c d e f g h i j k l m n o p q r s = Cons a (List18 b c d e f g h i j k l m n o p q r s)
+type List20 a b c d e f g h i j k l m n o p q r s t = Cons a (List19 b c d e f g h i j k l m n o p q r s t)
 
 
 class List a
