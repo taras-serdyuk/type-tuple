@@ -18,15 +18,17 @@ tests :: Interpreter ()
 tests = do
     let test m = "Type/Tuple/Test/" ++ m ++ ".hs"
     let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
-    loadModules [test "Types", src "List", src "Tuple"]
+    loadModules [test "Types", src "Nat", src "List", src "Tuple"]
     setImports [
         "Prelude",
+        "Type.Tuple.Nat",
         "Type.Tuple.Tuple",
         "Type.Tuple.Test.Types"]
     
     
     let inputsHalf = liftIO . applyGen 5 $ inputsGen 100
     let inputs1 = liftIO . applyGen 10 $ inputsGen1 100
+    let inputs = liftIO . applyGen 10 $ inputsGen 100
     
     invalid $ interpInst "Head" ["()"] "a"
     valids "Head" (return . head) inputs1
@@ -42,7 +44,8 @@ tests = do
     
     valid $ interpInst "Append" ["()", "()"] "()"
     inputsHalf >>= \xs -> inputsHalf >>= valids2 "Append" (\x y -> tuple (x ++ y)) xs
-
+    
+    valids "Length" (("Nat" ++) . show . length) inputs
 
 valids :: (Functor m, MonadInterpreter m) => String -> String2 -> m [String] -> m ()
 valids cl et xsm = xsm >>= mapM_ (\x -> valid $ interpInst cl [tuple x] (et x))

@@ -39,3 +39,6 @@ instance (TupleList a a', TupleList b b', L.Init a' b') => Init a b
 
 class Append a b c | a b -> c
 instance (TupleList a a', TupleList b b', TupleList c c', L.Append a' b' c') => Append a b c
+
+class Length a b | a -> b
+instance (TupleList a a', L.Length a' b) => Length a b
