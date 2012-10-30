@@ -61,3 +61,9 @@ instance (Append b c d) => Append (Cons a b) c (Cons a d)
 class Length a b | a -> b
 instance Length Nil Zero
 instance (Length b c) => Length (Cons a b) (Succ c)
+
+
+class Drop a b c | a b -> c
+instance Drop Zero a a
+instance Drop a Nil Nil
+instance (Drop a c d) => Drop (Succ a) (Cons b c) d
