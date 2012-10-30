@@ -5,6 +5,7 @@ import Control.Monad
 import Language.Haskell.Interpreter
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
+import Type.Tuple.Test.Test
 import Type.Tuple.Test.Text
 
 
@@ -30,8 +31,9 @@ tests = do
     let inputs1 = liftIO . applyGen 10 $ inputsGen1 100
     let inputs = liftIO . applyGen 10 $ inputsGen 100
     
-    invalid $ interpInst "Head" ["()"] "a"
+    no "Head () a"
     valids "Head" (return . head) inputs1
+    --eq 100 "Head" (return . head) `for1` list'
     
     invalid $ interpInst "Tail" ["()"] "a"
     valids "Tail" (tuple . tail) inputs1
@@ -42,9 +44,10 @@ tests = do
     invalid $ interpInst "Init" ["()"] "a"
     valids "Init" (tuple . init) inputs1
     
-    valid $ interpInst "Append" ["()", "()"] "()"
+    is "Append () () ()"
     inputsHalf >>= \xs -> inputsHalf >>= valids2 "Append" (\x y -> tuple (x ++ y)) xs
     
+    is "Length () Zero"
     valids "Length" (("Nat" ++) . show . length) inputs
 
 valids :: (Functor m, MonadInterpreter m) => String -> String2 -> m [String] -> m ()

@@ -26,5 +26,6 @@ library
                    Type.Tuple.Test.Interpreter,
                    Type.Tuple.Test.Types,
                    Type.Tuple.Test.Data,
-                   Type.Tuple.Nat
+                   Type.Tuple.Nat,
+                   Type.Tuple.Test.Test
 
