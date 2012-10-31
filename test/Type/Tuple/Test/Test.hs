@@ -3,14 +3,12 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Type.Tuple.Test.Test where
--- TODO: separate data generation, testing DSL and Interpreter API
+-- TODO: testing DSL and Interpreter API
 
 import Control.Monad
-import Language.Haskell.Interpreter
-import Test.QuickCheck.Gen
+import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
-import System.Random
 
 
 type Class = String
@@ -30,17 +28,10 @@ feedInst f inst = f cl pars res where
 
 -- TODO: convert to class For
 for1 :: (RenderType a, RenderType r, DataGenerator g a) => (Int, Class, a -> r) -> g -> Interpreter ()
-for1 (n, cl, et) g = mapM_ (\x -> valid $ interpInst cl [renderType x] (renderType $ et x)) =<< typesGen l n gen
-    where (gen, l) = generator g
+for1 (n, cl, et) gen = mapM_ (\x -> valid $ interpInst cl [renderType x] (renderType $ et x)) =<< liftIO (applyGen n gen)
 
 for2 :: (DataGenerator g1 a, DataGenerator g2 b, RenderType a, RenderType b, RenderType r) => (Int, Class, a -> b -> r) -> (g1, g2) -> Interpreter ()
-for2 (n, cl, et) (g1, g2) = valids2 cl et (typesGen xl n xGen) (typesGen yl n yGen)
-    where ((xGen, xl), (yGen, yl)) = (generator g1, generator g2)
-
-typesGen :: (MonadIO m) => Int -> Int -> Gen a -> m [a]
-typesGen l n = liftIO . applyGen l . vectorOf n where
-    applyGen :: Int -> Gen a -> IO a
-    applyGen size gen = liftM (flip (unGen gen) size) newStdGen
+for2 (n, cl, et) (xGen, yGen) = valids2 cl et (liftIO (applyGen n xGen)) (liftIO (applyGen n yGen))
 
 eq :: Int -> Class -> a -> (Int, Class, a)
 eq n cl et = (n, cl, et)

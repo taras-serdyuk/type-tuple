@@ -3,31 +3,39 @@
 
 module Type.Tuple.Test.Data where
 
+import Control.Monad
 import Data.List
 import Test.QuickCheck.Gen
 import Type.Tuple.Test.Text
 import Type.Tuple.Test.Types
+import System.Random
 
 
 data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
 data NatData = Nat
 
 
--- TODO: embed length
 class DataGenerator a b | a -> b where
-    generator :: a -> (Gen b, Int)
+    generator :: a -> Gen b
+    size :: a -> Int
+    size _ = maxSize
+
+maxSize :: Int
+maxSize = 20
 
 instance DataGenerator TupleData String where
-    generator AnyTuple = (listOf typeGen, 20)
-    generator NonEmptyTuple = (listOf1 typeGen, 20)
-    generator HalfTuple = (listOf typeGen, 10)
+    generator AnyTuple = listOf typeGen
+    generator NonEmptyTuple = listOf1 typeGen
+    generator HalfTuple = listOf typeGen
+    
+    size HalfTuple = div maxSize 2
+    size _ = maxSize
 
 typeGen :: Gen Char
 typeGen = elements types
 
 instance DataGenerator NatData Int where
-    -- TODO: refactor
-    generator Nat = (elements [0 .. 20], 20)
+    generator Nat = elements [0 .. maxSize]
 
 
 class RenderType a where
@@ -43,3 +51,8 @@ instance RenderType String where
 
 instance RenderType Int where
     renderType x = "Nat" ++ show x
+
+
+applyGen :: (DataGenerator a b) => Int -> a -> IO [b]
+applyGen n x = apply $ vectorOf n (generator x) where
+    apply gen = liftM (flip (unGen gen) (size x)) newStdGen
