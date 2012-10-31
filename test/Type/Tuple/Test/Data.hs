@@ -15,6 +15,7 @@ import System.Random
 
 data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
 data NatData = Nat
+data PairData a b = Pair a b
 
 
 class DataGenerator a b | a -> b where
@@ -29,8 +30,8 @@ instance DataGenerator TupleData String where
 instance DataGenerator NatData Int where
     generator _ = elements [0 .. maxSize]
 
-instance (DataGenerator a c, DataGenerator b d) => DataGenerator (a, b) (c, d) where
-    generator (x, y) = (,) <$> generator x <*> generator y
+instance (DataGenerator a c, DataGenerator b d) => DataGenerator (PairData a b) (c, d) where
+    generator (Pair x y) = (,) <$> generator x <*> generator y
 
 
 class RenderType a where
