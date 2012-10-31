@@ -64,6 +64,7 @@ instance (Length b c) => Length (Cons a b) (Succ c)
 
 
 class Drop a b c | a b -> c
+instance Drop Zero Nil Nil
 instance Drop Zero a a
 instance Drop a Nil Nil
 instance (Drop a c d) => Drop (Succ a) (Cons b c) d

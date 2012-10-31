@@ -44,4 +44,4 @@ tests = do
     is "Length () Zero"
     eq 20 "Length" length `for1` AnyTuple
     
-    --eq 100 "Drop" drop `for2` (Nat, AnyTuple)
+    eq 100 "Drop" drop `for2` (Nat, AnyTuple)
