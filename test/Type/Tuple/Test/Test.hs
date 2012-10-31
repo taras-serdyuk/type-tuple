@@ -10,6 +10,10 @@ import Language.Haskell.Interpreter
 import Test.QuickCheck.Gen
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
+import System.Random
+
+
+type Class = String
 
 
 is, no :: String -> Interpreter ()
@@ -18,7 +22,7 @@ is = valid . feedInst interpInst
 no = invalid . feedInst interpInst
 
 -- TODO: refactor
-feedInst :: (Class -> [Type] -> Type -> a) -> String -> a
+feedInst :: (Class -> [String] -> String -> a) -> String -> a
 feedInst f inst = f cl pars res where
     (cl : rest) = words inst
     (pars, res) = (init rest, last rest)
@@ -34,7 +38,9 @@ for2 (n, cl, et) (g1, g2) = valids2 cl et (typesGen xl n xGen) (typesGen yl n yG
     where ((xGen, xl), (yGen, yl)) = (generator g1, generator g2)
 
 typesGen :: (MonadIO m) => Int -> Int -> Gen a -> m [a]
-typesGen l n = liftIO . applyGen l . vectorOf n
+typesGen l n = liftIO . applyGen l . vectorOf n where
+    applyGen :: Int -> Gen a -> IO a
+    applyGen size gen = liftM (flip (unGen gen) size) newStdGen
 
 eq :: Int -> Class -> a -> (Int, Class, a)
 eq n cl et = (n, cl, et)
