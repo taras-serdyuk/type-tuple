@@ -1,33 +1,28 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module Type.Tuple.Test.Interpreter where
--- TODO: legacy
 
 import Control.Monad.Error
 import Language.Haskell.Interpreter
-import Type.Tuple.Test.Phantom
 import Type.Tuple.Test.Text
 
 
-valid, invalid :: (Functor m, MonadInterpreter m) => (String, m Bool) -> m ()
+valid, invalid :: String -> String -> Interpreter ()
 
-valid (inst, interp) = void $ catchError interp rethrow where
-    rethrow err = failInst inst (showInterpErr err)
+valid msg expr = void $ run expr rethrow where
+    rethrow err = incorrect msg (showInterpErr err)
 
-invalid (inst, interp) = void $ catchError interp (const false) >>= throw where
-    throw True = failInst inst "Compiled!"
+invalid msg expr = void $ run expr (const false) >>= throw where
+    throw True = incorrect msg "Compiled!"
     throw False = false
     false = return False
 
 
-interpInst :: (MonadInterpreter m) => String -> [String] -> String -> (String, m Bool)
-interpInst cl pars res = (inst, interp) where
-    inst = unwords (cl : pars ++ [res])
-    interp = interpret expr (as :: Bool)
-    expr = truePhantom (applyClass cl pars res)
+run :: MonadInterpreter m => String -> (InterpreterError -> m Bool) -> m Bool
+run expr = catchError (interpret expr (as :: Bool))
 
-failInst :: (MonadError InterpreterError m) => String -> String -> m a
-failInst inst msg = throwError $ NotAllowed (inst .| msg)
+incorrect :: (MonadError InterpreterError m) => String -> String -> m a
+incorrect msg ctx = throwError $ NotAllowed (msg .| ctx)
 
 showInterpErr :: InterpreterError -> String
 showInterpErr err = case err of

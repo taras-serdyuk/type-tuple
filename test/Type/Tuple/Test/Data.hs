@@ -11,7 +11,8 @@ import Type.Tuple.Test.Types
 import System.Random
 
 
-data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
+data MaxTupleData = AnyTuple | NonEmptyTuple
+data HalfTupleData = HalfTuple
 data NatData = Nat
 
 
@@ -23,19 +24,21 @@ class DataGenerator a b | a -> b where
 maxSize :: Int
 maxSize = 20
 
-instance DataGenerator TupleData String where
+
+instance DataGenerator MaxTupleData String where
     generator AnyTuple = listOf typeGen
     generator NonEmptyTuple = listOf1 typeGen
-    generator HalfTuple = listOf typeGen
-    
-    size HalfTuple = div maxSize 2
-    size _ = maxSize
+
+instance DataGenerator HalfTupleData String where
+    generator _ = listOf typeGen
+    size _ = div maxSize 2
 
 typeGen :: Gen Char
 typeGen = elements types
 
+
 instance DataGenerator NatData Int where
-    generator Nat = elements [0 .. maxSize]
+    generator _ = elements [0 .. maxSize]
 
 
 class RenderType a where

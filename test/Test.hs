@@ -7,6 +7,7 @@ import Type.Tuple.Test.Interpreter -- TODO: delete
 import Type.Tuple.Test.Test
 
 
+-- TODO: refactor
 main :: IO ()
 main = runInterpreter tests >>= putStrLn . result where
     result (Left err) = showInterpErr err
@@ -15,6 +16,7 @@ main = runInterpreter tests >>= putStrLn . result where
 
 tests :: Interpreter ()
 tests = do
+    -- TODO: extract
     let test m = "Type/Tuple/Test/" ++ m ++ ".hs"
     let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
     
