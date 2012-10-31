@@ -12,7 +12,7 @@ import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
 
 
-is, no :: (Functor m, MonadInterpreter m) => String -> m ()
+is, no :: String -> Interpreter ()
 
 is = valid . feedInst interpInst
 no = invalid . feedInst interpInst
@@ -25,11 +25,13 @@ feedInst f inst = f cl pars res where
 
 
 -- TODO: convert to class For
-for1 :: (RenderType r, Functor m, MonadInterpreter m) => (Int, Class, Type -> r) -> GenT -> m ()
-for1 (n, cl, et) (gen, l) = mapM_ (\x -> valid $ interpInst cl [renderType x] (renderType $ et x)) =<< typesGen l n gen
+for1 :: (RenderType a, RenderType r, DataGenerator g a) => (Int, Class, a -> r) -> g -> Interpreter ()
+for1 (n, cl, et) g = mapM_ (\x -> valid $ interpInst cl [renderType x] (renderType $ et x)) =<< typesGen l n gen
+    where (gen, l) = generator g
 
-for2 :: (RenderType r, Functor m, MonadInterpreter m) => (Int, Class, Type -> Type -> r) -> (GenT, GenT) -> m ()
-for2 (n, cl, et) ((xGen, xl), (yGen, yl)) = valids2 cl et (typesGen xl n xGen) (typesGen yl n yGen)
+for2 :: (DataGenerator g1 a, DataGenerator g2 b, RenderType a, RenderType b, RenderType r) => (Int, Class, a -> b -> r) -> (g1, g2) -> Interpreter ()
+for2 (n, cl, et) (g1, g2) = valids2 cl et (typesGen xl n xGen) (typesGen yl n yGen)
+    where ((xGen, xl), (yGen, yl)) = (generator g1, generator g2)
 
 typesGen :: (MonadIO m) => Int -> Int -> Gen a -> m [a]
 typesGen l n = liftIO . applyGen l . vectorOf n
@@ -39,5 +41,5 @@ eq n cl et = (n, cl, et)
 
 
 -- TODO: delete
-valids2 :: (RenderType r, Functor m, MonadInterpreter m) => String -> (Type -> Type -> r) -> m [String] -> m [String] -> m ()
+valids2 :: (RenderType a, RenderType b, RenderType r) => String -> (a -> b -> r) -> Interpreter [a] -> Interpreter [b] -> Interpreter ()
 valids2 cl et xsm ysm = xsm >>= \xs -> ysm >>= zipWithM_ (\x y -> valid $ interpInst cl [renderType x, renderType y] (renderType $ et x y)) xs

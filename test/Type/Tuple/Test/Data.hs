@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
 
 module Type.Tuple.Test.Data where
 -- TODO: legacy
@@ -13,12 +14,28 @@ import Type.Tuple.Test.Types
 
 type Class = String
 type Type = String
-type GenT = (Gen Type, Int)
-
--- TODO: data generators
-data Data = Tuple | NonEmptyTuple | HalfTuple | Nat
 
 
+data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
+data NatData = Nat
+
+-- TODO: embed length
+-- TODO: other names
+class DataGenerator a b | a -> b where
+    generator :: a -> (Gen b, Int)
+
+instance DataGenerator TupleData String where
+    -- TODO: refactor
+    generator AnyTuple = (listOf $ elements types, 20)
+    generator NonEmptyTuple = (listOf1 $ elements types, 20)
+    generator HalfTuple = (listOf $ elements types, 10)
+
+instance DataGenerator NatData Int where
+    -- TODO: refactor
+    generator Nat = (elements [0 .. 20], 20)
+
+
+-- TODO: other names
 class RenderType a where
     renderType :: a -> Type
 
@@ -26,34 +43,13 @@ instance RenderType Char where
     renderType = return
 
 instance RenderType String where
-    renderType = tuple
+    renderType [] = "()"
+    renderType [x] = parens ("Only" .- [x])
+    renderType xs = parens (intersperse ',' xs)
 
 instance RenderType Int where
     renderType x = "Nat" ++ show x
 
-
-list :: GenT
-list = (inputsGen, 20)
-
-list' :: GenT
-list' = (inputsGen1, 20)
-
-list2 :: GenT
-list2 = (inputsGen, 10)
-
-
--- TODO: delete
-tuple :: String2
-tuple [] = "()"
-tuple [x] = parens ("Only" .- [x])
-tuple xs = parens (intersperse ',' xs)
-
-
-inputsGen :: Gen Type
-inputsGen = listOf $ elements types
-
-inputsGen1 :: Gen Type
-inputsGen1 = listOf1 $ elements types
 
 applyGen :: Int -> Gen a -> IO a
 applyGen size gen = liftM (flip (unGen gen) size) newStdGen

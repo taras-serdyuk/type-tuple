@@ -27,19 +27,21 @@ tests = do
     
     
     no "Head () a"
-    eq 50 "Head" head `for1` list'
+    eq 100 "Head" head `for1` NonEmptyTuple
     
     no "Tail () a"
-    eq 50 "Tail" tail `for1` list'
+    eq 100 "Tail" tail `for1` NonEmptyTuple
     
     no "Last () a"
-    eq 50 "Last" last `for1` list'
+    eq 100 "Last" last `for1` NonEmptyTuple
     
     no "Init () a"
-    eq 50 "Init" init `for1` list'
+    eq 100 "Init" init `for1` NonEmptyTuple
     
     is "Append () () ()"
-    eq 200 "Append" (++) `for2` (list2, list2)
+    eq 200 "Append" (++) `for2` (HalfTuple, HalfTuple)
     
     is "Length () Zero"
-    eq 20 "Length" length `for1` list
+    eq 20 "Length" length `for1` AnyTuple
+    
+    --eq 100 "Drop" drop `for2` (Nat, AnyTuple)
