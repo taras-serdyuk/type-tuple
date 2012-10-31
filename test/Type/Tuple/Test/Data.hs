@@ -1,8 +1,10 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Type.Tuple.Test.Data where
 
+import Control.Applicative
 import Control.Monad
 import Data.List
 import Test.QuickCheck.Gen
@@ -18,27 +20,20 @@ data NatData = Nat
 
 class DataGenerator a b | a -> b where
     generator :: a -> Gen b
-    size :: a -> Int
-    size _ = maxSize
-
-maxSize :: Int
-maxSize = 20
-
 
 instance DataGenerator MaxTupleData String where
     generator AnyTuple = listOf typeGen
     generator NonEmptyTuple = listOf1 typeGen
 
 instance DataGenerator HalfTupleData String where
-    generator _ = listOf typeGen
-    size _ = div maxSize 2
-
-typeGen :: Gen Char
-typeGen = elements types
-
+    generator _ = resize size $ listOf typeGen
+        where size = div maxSize 2
 
 instance DataGenerator NatData Int where
     generator _ = elements [0 .. maxSize]
+
+instance (DataGenerator a c, DataGenerator b d) => DataGenerator (a, b) (c, d) where
+    generator (x, y) = (,) <$> generator x <*> generator y
 
 
 class RenderType a where
@@ -56,6 +51,12 @@ instance RenderType Int where
     renderType x = "Nat" ++ show x
 
 
+maxSize :: Int
+maxSize = 20
+
+typeGen :: Gen Char
+typeGen = elements types
+
 applyGen :: (DataGenerator a b) => Int -> a -> IO [b]
 applyGen n x = apply $ vectorOf n (generator x) where
-    apply gen = liftM (flip (unGen gen) (size x)) newStdGen
+    apply gen = liftM (flip (unGen gen) maxSize) newStdGen
