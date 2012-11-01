@@ -1,10 +1,9 @@
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE UndecidableInstances #-}
 
 module Type.Tuple.Test.Test where
 
+import Control.Applicative
 import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
@@ -12,6 +11,7 @@ import Type.Tuple.Test.Expression
 
 
 type Class = String
+type ForF f = (Int, Class, f) -> Interpreter ()
 
 data Renderable = forall a. RenderType a => Renderable a
 
@@ -20,18 +20,16 @@ instance RenderType Renderable where
     renderType (Renderable x) = renderType x
 
 
-class (DataGenerator g a, RenderType r) => For g a r f | a -> r f where
-    for :: (Int, Class, f) -> g -> Interpreter ()
-    
-    apply :: Int -> Class -> g -> (a -> [Renderable]) -> (a -> r) -> Interpreter ()
-    apply n cl gen parsf' resf' = liftIO (applyGen n gen) >>= mapM_ (valid' cl parsf' resf')
+class For f where
+    for :: f
 
--- TODO: simplify
-instance (DataGenerator g (Only a), RenderType a, RenderType r) => For g (Only a) r (a -> r) where
-    for (n, cl, et) gen = apply n cl gen (return . Renderable) (et . fromOnly)
+-- TODO: refactor
+instance (DataGenerator g a, RenderType a, RenderType r) => For (g -> ForF (a -> r)) where
+    for gen (n, cl, et) = liftIO (applyGen n gen) >>= mapM_ (valid' cl (return . Renderable) et)
 
-instance (DataGenerator g (a, b), RenderType a, RenderType b, RenderType r) => For g (a, b) r (a -> b -> r) where
-    for (n, cl, et) gen = apply n cl gen (\(x, y) -> [Renderable x, Renderable y]) (uncurry et)
+-- TODO: refactor
+instance (DataGenerator g a, DataGenerator j b, RenderType a, RenderType b, RenderType r) => For (g -> j -> ForF (a -> b -> r)) where
+    for gen jen (n, cl, et) = liftIO (applyGen1 n ((,) <$> generator gen <*> generator jen)) >>= mapM_ (valid' cl (\(x, y) -> [Renderable x, Renderable y]) (uncurry et))
 
 
 is, no :: String -> Interpreter ()
@@ -40,8 +38,8 @@ is inst = valid inst (applyInst inst)
 no inst = invalid inst (applyInst inst)
 
 
-eq :: Int -> Class -> a -> (Int, Class, a)
-eq n cl et = (n, cl, et)
+eq :: Int -> Class -> a -> ForF a -> Interpreter ()
+eq n cl et f = f (n, cl, et)
 
 
 -- TODO: refactor
