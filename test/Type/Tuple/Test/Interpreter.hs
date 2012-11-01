@@ -7,7 +7,7 @@ import Language.Haskell.Interpreter
 import Type.Tuple.Test.Text
 
 
-valid, invalid :: String -> String -> Interpreter ()
+valid, invalid :: (Functor m, MonadInterpreter m) => String -> String -> m ()
 
 valid msg expr = void $ run expr rethrow where
     rethrow err = incorrect msg (showInterpErr err)

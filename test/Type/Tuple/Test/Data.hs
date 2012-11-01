@@ -6,6 +6,7 @@
 module Type.Tuple.Test.Data where
 
 import Control.Monad
+import Control.Monad.Trans
 import Data.List
 import Test.QuickCheck.Gen
 import Type.Tuple.Test.Text
@@ -51,11 +52,6 @@ maxSize = 20
 typeGen :: Gen Char
 typeGen = elements types
 
-applyGen :: (DataGenerator a b) => Int -> a -> IO [b]
-applyGen n x = apply . vectorOf n $ generator x where
-    apply gen = liftM (flip (unGen gen) maxSize) newStdGen
-
--- TODO: refactor
-applyGen1 :: Int -> Gen a -> IO [a]
-applyGen1 n x = apply $ vectorOf n x where
+applyGen :: (DataGenerator a b, MonadIO m) => Int -> a -> m [b]
+applyGen n x = liftIO . apply . vectorOf n $ generator x where
     apply gen = liftM (flip (unGen gen) maxSize) newStdGen

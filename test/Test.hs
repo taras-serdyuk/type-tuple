@@ -29,21 +29,21 @@ tests = do
     
     
     no "Head () a"
-    eq 100 "Head" head $for NonEmptyTuple
+    same 100 "Head" head (for NonEmptyTuple)
     
     no "Tail () a"
-    eq 100 "Tail" tail $for NonEmptyTuple
+    same 100 "Tail" tail (for NonEmptyTuple)
     
     no "Last () a"
-    eq 100 "Last" last $for NonEmptyTuple
+    same 100 "Last" last (for NonEmptyTuple)
     
     no "Init () a"
-    eq 100 "Init" init $for NonEmptyTuple
+    same 100 "Init" init (for NonEmptyTuple)
     
     is "Append () () ()"
-    eq 200 "Append" (++) $for HalfTuple HalfTuple
+    same 200 "Append" (++) (for HalfTuple HalfTuple)
     
     is "Length () Zero"
-    eq 20 "Length" length $for AnyTuple
+    same 20 "Length" length (for AnyTuple)
     
-    eq 100 "Drop" drop $for Nat AnyTuple
+    same 100 "Drop" drop (for Nat AnyTuple)

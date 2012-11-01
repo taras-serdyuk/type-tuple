@@ -4,49 +4,35 @@
 module Type.Tuple.Test.Test where
 
 import Control.Applicative
+import Control.Monad
 import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data
 import Type.Tuple.Test.Interpreter
 import Type.Tuple.Test.Expression
 
 
-type Class = String
-type ForF f = (Int, Class, f) -> Interpreter ()
-
-data Renderable = forall a. RenderType a => Renderable a
-
-
-instance RenderType Renderable where
-    renderType (Renderable x) = renderType x
+type ForF f = Int -> Class -> f -> Interpreter ()
 
 
 class For f where
     for :: f
 
--- TODO: refactor
 instance (DataGenerator g a, RenderType a, RenderType r) => For (g -> ForF (a -> r)) where
-    for gen (n, cl, et) = liftIO (applyGen n gen) >>= mapM_ (valid' cl (return . Renderable) et)
+    for gen n cl et = mapM_ f =<< applyGen n gen
+        where f x = valid' $ Inst1 cl (renderType x) (renderType $ et x)
 
--- TODO: refactor
 instance (DataGenerator g a, DataGenerator j b, RenderType a, RenderType b, RenderType r) => For (g -> j -> ForF (a -> b -> r)) where
-    for gen jen (n, cl, et) = liftIO (applyGen1 n ((,) <$> generator gen <*> generator jen)) >>= mapM_ (valid' cl (\(x, y) -> [Renderable x, Renderable y]) (uncurry et))
+    for xgen ygen n cl et = join $ zipWithM_ f <$> applyGen n xgen <*> applyGen n ygen
+        where f x y = valid' $ Inst2 cl (renderType x) (renderType y) (renderType $ et x y)
+
+valid' :: Instance -> Interpreter ()
+valid' inst = valid (renderType inst) expr where
+    expr = applyClass (instClass inst) (instParams inst) (instResult inst)
 
 
 is, no :: String -> Interpreter ()
-
 is inst = valid inst (applyInst inst)
 no inst = invalid inst (applyInst inst)
 
-
-eq :: Int -> Class -> a -> ForF a -> Interpreter ()
-eq n cl et f = f (n, cl, et)
-
-
--- TODO: refactor
-valid' :: (RenderType a, RenderType b) => Class -> (t -> [a]) -> (t -> b) -> t ->Interpreter ()
-valid' cl parsf' resf' x = valid (mkInst' cl pars res) (appInst' cl pars res)
-    where (pars, res) = (parsf' x, resf' x)
-
-mkInst', appInst' :: (RenderType a, RenderType b) => Class -> [a] -> b -> String
-mkInst' cl pars res = mkInst cl (map renderType pars) (renderType res)
-appInst' cl pars res = truePhantom $ applyClass cl (map renderType pars) (renderType res)
+same :: Int -> Class -> f -> ForF f -> Interpreter ()
+same n cl et f = f n cl et
