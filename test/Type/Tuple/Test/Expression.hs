@@ -31,15 +31,19 @@ instResult (Inst1 _ _ x) = x
 instResult (Inst2 _ _ _ x) = x
 
 
--- TODO: refactor
-applyInst :: String -> String
-applyInst inst = applyClass cl pars res where
-    (cl : rest) = words inst
-    (pars, res) = (init rest, last rest)
+mkInst :: Class -> [String] -> Instance
+mkInst cl [a, b] = Inst1 cl a b
+mkInst cl [a, b, c] = Inst2 cl a b c
+mkInst cl pars = error $ "Unsupported instance:" .- cl .- unwords pars
 
-applyClass :: String -> [String] -> String2
-applyClass cl pars res = truePhantom $ unwords (func : map phantom pars) .:: res
-    where func = phantom $ classFunc (length pars + 1) cl
+
+parseInst :: String -> Instance
+parseInst x = mkInst cl pars
+    where (cl : pars) = words x
+
+applyInst :: Instance -> String
+applyInst x = truePhantom $ unwords (func : map phantom (instParams x)) .:: instResult x
+    where func = phantom $ classFunc (length (instParams x) + 1) (instClass x)
 
 truePhantom :: String2
 truePhantom expr = "const True" .- parens expr

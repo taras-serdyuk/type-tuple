@@ -10,10 +10,10 @@ import Type.Tuple.Test.Text
 valid, invalid :: (Functor m, MonadInterpreter m) => String -> String -> m ()
 
 valid msg expr = void $ run expr rethrow where
-    rethrow err = incorrect msg (showInterpErr err)
+    rethrow err = notAllowed (msg .| showInterpErr err)
 
 invalid msg expr = void $ run expr (const false) >>= throw where
-    throw True = incorrect msg "Compiled!"
+    throw True = notAllowed msg
     throw False = false
     false = return False
 
@@ -21,8 +21,8 @@ invalid msg expr = void $ run expr (const false) >>= throw where
 run :: MonadInterpreter m => String -> (InterpreterError -> m Bool) -> m Bool
 run expr = catchError (interpret expr (as :: Bool))
 
-incorrect :: (MonadError InterpreterError m) => String -> String -> m a
-incorrect msg ctx = throwError $ NotAllowed (msg .| ctx)
+notAllowed :: (MonadError InterpreterError m) => String -> m a
+notAllowed = throwError . NotAllowed
 
 showInterpErr :: InterpreterError -> String
 showInterpErr err = case err of
