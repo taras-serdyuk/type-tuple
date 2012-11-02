@@ -3,7 +3,7 @@ module Main where
 
 import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data -- TODO: delete
-import Type.Tuple.Test.Interpreter
+import Type.Tuple.Test.Runner
 import Type.Tuple.Test.Test
 
 

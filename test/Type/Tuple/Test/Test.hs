@@ -6,8 +6,8 @@ import Control.Applicative
 import Control.Monad
 import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data
-import Type.Tuple.Test.Interpreter
 import Type.Tuple.Test.Expression
+import Type.Tuple.Test.Runner
 
 
 type ForF f = Int -> Class -> f -> TypeCheck ()

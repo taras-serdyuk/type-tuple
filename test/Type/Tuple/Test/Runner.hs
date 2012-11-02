@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module Type.Tuple.Test.Interpreter where
--- TODO: rename to Runner or something like that
+module Type.Tuple.Test.Runner where
 
 import Control.Applicative
 import Control.Monad.Error

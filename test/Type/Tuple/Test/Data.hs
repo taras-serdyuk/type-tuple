@@ -6,7 +6,7 @@
 module Type.Tuple.Test.Data where
 
 import Control.Monad
-import Control.Monad.Trans -- TODO: replace mtl with transformers package
+import Control.Monad.Trans
 import Data.List
 import Test.QuickCheck.Gen
 import Type.Tuple.Test.Text
