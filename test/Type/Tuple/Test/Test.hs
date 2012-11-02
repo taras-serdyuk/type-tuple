@@ -10,17 +10,26 @@ import Type.Tuple.Test.Expression
 import Type.Tuple.Test.Runner
 
 
+type InterpGen = Gen (Interpreter ())
+
+
 class Same f where
     same :: Class -> f
 
-instance (DataGenerator g a, RenderType a, RenderType r) => Same ((a -> r) -> g -> Gen (Interpreter ())) where
-    same cl et gen = liftM (\x -> validInst $ Inst1 cl (renderType x) (renderType $ et x)) (generator gen)
+instance (DataGenerator g a, RenderType a, RenderType r) =>
+    Same ((a -> r) -> g -> InterpGen) where
+    
+    same cl et gen = liftM (validInst . inst) (generator gen)
+        where inst x = Inst1 cl (renderType x) (renderType (et x))
 
-instance (DataGenerator g a, DataGenerator j b, RenderType a, RenderType b, RenderType r) => Same ((a -> b -> r) -> g -> j -> Gen (Interpreter ())) where
-    same cl et xGen yGen = liftM2 (\x y -> validInst $ Inst2 cl (renderType x) (renderType y) (renderType $ et x y)) (generator xGen) (generator yGen)
+instance (DataGenerator g a, DataGenerator j b, RenderType a, RenderType b, RenderType r) =>
+    Same ((a -> b -> r) -> g -> j -> InterpGen) where
+    
+    same cl et xGen yGen = liftM2 (\x -> validInst . inst x) (generator xGen) (generator yGen)
+        where inst x y = Inst2 cl (renderType x) (renderType y) (renderType (et x y))
 
 
-run :: Int -> Gen (Interpreter ()) -> TypeCheck ()
+run :: Int -> InterpGen -> TypeCheck ()
 run n g = TypeCheck $ applyGen n g >>= sequence_
 
 is, no :: String -> TypeCheck ()
