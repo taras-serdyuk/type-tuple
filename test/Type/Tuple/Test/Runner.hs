@@ -2,30 +2,37 @@
 
 module Type.Tuple.Test.Runner where
 
-import Control.Applicative
 import Control.Monad.Error
 import Language.Haskell.Interpreter
 import Type.Tuple.Test.Text
 
 
+data Result = Ok | Error String
+
 newtype TypeCheck a = TypeCheck { unTypeCheck :: Interpreter a }
 
 
-instance Functor TypeCheck where
-    fmap f = TypeCheck . fmap f . unTypeCheck
-
-instance Applicative TypeCheck where
-    pure = TypeCheck . pure
-    
-    (TypeCheck f) <*> (TypeCheck x) = TypeCheck (f <*> x)
+instance Show Result where
+    show Ok = "Ok"
+    show (Error msg) = "Error" .| msg
 
 instance Monad TypeCheck where
-    return = pure
+    return = TypeCheck . return
     
-    (TypeCheck x) >>= f = TypeCheck (liftM f x >>= unTypeCheck)
+    (TypeCheck x) >>= f = TypeCheck $ x >>= (unTypeCheck . f)
 
-instance MonadIO TypeCheck where
-    liftIO = TypeCheck . liftIO
+
+run :: [String] -> [String] -> TypeCheck () -> IO Result
+run modules imports tests = fmap mkResult . runInterpreter $ do
+    loadModules modules
+    setImports imports
+    unTypeCheck tests
+
+mkResult :: Either InterpreterError () -> Result
+mkResult = either (Error . showInterpErr) (const Ok)
+
+execute :: IO a -> TypeCheck a
+execute = TypeCheck . liftIO
 
 
 valid, invalid :: String -> String -> Interpreter ()

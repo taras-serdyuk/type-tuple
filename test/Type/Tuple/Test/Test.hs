@@ -29,8 +29,8 @@ instance (DataGenerator g a, DataGenerator j b, RenderType a, RenderType b, Rend
         where inst x y = Inst2 cl (renderType x) (renderType y) (renderType (et x y))
 
 
-run :: Int -> InterpGen -> TypeCheck ()
-run n g = TypeCheck $ applyGen n g >>= sequence_
+test :: Int -> InterpGen -> TypeCheck ()
+test n g = TypeCheck $ applyGen n g >>= sequence_
 
 is, no :: String -> TypeCheck ()
 is = TypeCheck . validInst . parseInst
