@@ -27,5 +27,6 @@ library
                    Type.Tuple.Test.Test,
                    Type.Tuple.Test.Expression,
                    Main,
-                   Type.Tuple.Test.Runner
+                   Type.Tuple.Test.Runner,
+                   Type.Tuple.Test.Instance
 

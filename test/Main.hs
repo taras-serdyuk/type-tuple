@@ -1,7 +1,7 @@
 
 module Main where
 
-import Type.Tuple.Test.Data -- TODO: delete
+import Type.Tuple.Test.Data
 import Type.Tuple.Test.Runner
 import Type.Tuple.Test.Test
 
@@ -21,7 +21,7 @@ imports = ["Prelude", root "Nat", root "Tuple", root "Test.Types"]
     where root = ("Type.Tuple." ++)
 
 
-tests :: TypeCheck ()
+tests :: Test ()
 tests = do
     execute $ putStrLn "Initialized"
     

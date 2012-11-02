@@ -1,15 +1,11 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE UndecidableInstances #-}
 
 module Type.Tuple.Test.Data where
 
 import Control.Monad
 import Control.Monad.Trans
-import Data.List
 import Test.QuickCheck.Gen
-import Type.Tuple.Test.Text
 import Type.Tuple.Test.Types
 import System.Random
 
@@ -29,21 +25,6 @@ instance DataGenerator TupleData String where
 
 instance DataGenerator NatData Int where
     generator _ = elements [0 .. maxSize]
-
-
-class RenderType a where
-    renderType :: a -> String
-
-instance RenderType Char where
-    renderType = return
-
-instance RenderType String where
-    renderType [] = "()"
-    renderType [x] = parens ("Only" .- [x])
-    renderType xs = parens (intersperse ',' xs)
-
-instance RenderType Int where
-    renderType x = "Nat" ++ show x
 
 
 maxSize :: Int
