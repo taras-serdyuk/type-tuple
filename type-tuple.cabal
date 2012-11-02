@@ -20,12 +20,12 @@ library
   other-modules:   
                    Type.Tuple.Tuple,
                    Type.Tuple.List,
-                   Test,
                    Type.Tuple.Test.Text,
                    Type.Tuple.Test.Interpreter,
                    Type.Tuple.Test.Types,
                    Type.Tuple.Test.Data,
                    Type.Tuple.Nat,
                    Type.Tuple.Test.Test,
-                   Type.Tuple.Test.Expression
+                   Type.Tuple.Test.Expression,
+                   Main
 

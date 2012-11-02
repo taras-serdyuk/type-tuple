@@ -1,32 +1,33 @@
 
-module Test where
+module Main where
 
-import Language.Haskell.Interpreter
+import Language.Haskell.Interpreter -- TODO: delete
 import Type.Tuple.Test.Data -- TODO: delete
-import Type.Tuple.Test.Interpreter -- TODO: delete
+import Type.Tuple.Test.Interpreter
 import Type.Tuple.Test.Test
 
 
 -- TODO: refactor
 main :: IO ()
-main = runInterpreter tests >>= putStrLn . result where
+main = putStrLn "Started" >> runInterpreter (unTypeCheck tests) >>= putStrLn . result where
     result (Left err) = showInterpErr err
     result (Right _) = "Ok"
 
 
-tests :: Interpreter ()
+tests :: TypeCheck ()
 tests = do
-    -- TODO: extract
+    -- TODO: extract to setup function
     let test m = "Type/Tuple/Test/" ++ m ++ ".hs"
     let src m = "../src/Type/Tuple/" ++ m ++ ".hs"
     
-    loadModules [test "Types", src "Nat", src "List", src "Tuple"]
-    setImports [
+    TypeCheck $ loadModules [test "Types", src "Nat", src "List", src "Tuple"]
+    TypeCheck $ setImports [
         "Prelude",
         "Type.Tuple.Nat",
         "Type.Tuple.Tuple",
         "Type.Tuple.Test.Types"]
     
+    liftIO $ putStrLn "Initialized"
     
     no "Head () a"
     same 100 "Head" head (for NonEmptyTuple)
