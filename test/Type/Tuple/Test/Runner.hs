@@ -30,18 +30,18 @@ instance MonadIO TypeCheck where
 
 valid, invalid :: String -> String -> Interpreter ()
 
-valid msg expr = void (run expr rethrow) where
+valid msg expr = void (interp expr rethrow) where
     rethrow err = notAllowed (msg .| showInterpErr err)
 
-invalid msg expr = void (run expr (const false) >>= throw) where
+invalid msg expr = void (interp expr (const false) >>= throw) where
     throw True = notAllowed msg
     throw False = false
     false = return False
 
 
 -- TODO: move truePhantom to here
-run :: (MonadInterpreter m) => String -> (InterpreterError -> m Bool) -> m Bool
-run = catchError . flip interpret (as :: Bool)
+interp :: (MonadInterpreter m) => String -> (InterpreterError -> m Bool) -> m Bool
+interp = catchError . flip interpret (as :: Bool)
 
 notAllowed :: (MonadError InterpreterError m) => String -> m a
 notAllowed = throwError . NotAllowed

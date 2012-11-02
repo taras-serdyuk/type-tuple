@@ -52,6 +52,6 @@ maxSize = 20
 typeGen :: Gen Char
 typeGen = elements types
 
-applyGen :: (DataGenerator a b, MonadIO m) => Int -> a -> m [b]
-applyGen n x = liftIO . apply . vectorOf n $ generator x where
+applyGen :: (MonadIO m) => Int -> Gen a -> m [a]
+applyGen n x = liftIO . apply $ vectorOf n x where
     apply gen = liftM (flip (unGen gen) maxSize) newStdGen

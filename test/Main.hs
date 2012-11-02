@@ -30,21 +30,21 @@ tests = do
     liftIO $ putStrLn "Initialized"
     
     no "Head () a"
-    same 100 "Head" head (for NonEmptyTuple)
+    run 100 $ same "Head" head NonEmptyTuple
     
     no "Tail () a"
-    same 100 "Tail" tail (for NonEmptyTuple)
+    run 100 $ same "Tail" tail NonEmptyTuple
     
     no "Last () a"
-    same 100 "Last" last (for NonEmptyTuple)
+    run 100 $ same "Last" last NonEmptyTuple
     
     no "Init () a"
-    same 100 "Init" init (for NonEmptyTuple)
+    run 100 $ same "Init" init NonEmptyTuple
     
     is "Append () () ()"
-    same 200 "Append" (++) (for HalfTuple HalfTuple)
+    run 200 $ same "Append" (++) HalfTuple HalfTuple
     
     is "Length () Zero"
-    same 20 "Length" length (for AnyTuple)
+    run 20 $ same "Length" length AnyTuple
     
-    same 100 "Drop" drop (for Nat AnyTuple)
+    run 100 $ same "Drop" drop Nat AnyTuple
