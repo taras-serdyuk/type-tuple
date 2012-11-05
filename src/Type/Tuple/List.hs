@@ -74,3 +74,9 @@ class Reverse a b | a -> b where
 
 instance Reverse Nil Nil
 instance (List b, List d, List e, Last (Cons a b) c, Init (Cons a b) e, Reverse e d) => Reverse (Cons a b) (Cons c d)
+
+
+class Replicate a b c | a b -> c where
+
+instance Replicate Zero a Nil
+instance (Replicate a b c) => Replicate (Succ a) b (Cons b c)

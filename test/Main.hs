@@ -47,3 +47,5 @@ tests = do
 
     test 100 $ same "Reverse" reverse AnyTuple
     
+    test 50 $ same "Replicate" replicate Nat Elem
+    
