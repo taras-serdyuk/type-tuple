@@ -21,13 +21,13 @@ class RenderType a where
 instance RenderType Char where
     renderType = return
 
+instance RenderType Int where
+    renderType x = "Nat" ++ show x
+
 instance RenderType String where
     renderType [] = "()"
     renderType [x] = parens ("Only" .- [x])
     renderType xs = parens (intersperse ',' xs)
-
-instance RenderType Int where
-    renderType x = "Nat" ++ show x
 
 instance RenderType Instance where
     renderType x = unwords (instClass x : instParams x ++ [instResult x])

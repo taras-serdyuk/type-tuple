@@ -71,11 +71,11 @@ instance Drop a Nil Nil
 instance (Drop a c d) => Drop (Succ a) (Cons b c) d
 
 
-class Reverse a b | a -> b where
+class Reverse a b | a -> b
 instance Reverse Nil Nil
 instance (Last (Cons a b) c, Init (Cons a b) e, Reverse e d) => Reverse (Cons a b) (Cons c d)
 
 
-class Replicate a b c | a b -> c where
+class Replicate a b c | a b -> c
 instance Replicate Zero a Nil
 instance (Replicate a b c) => Replicate (Succ a) b (Cons b c)

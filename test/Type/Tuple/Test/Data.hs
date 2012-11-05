@@ -14,7 +14,7 @@ data ElementData = Elem
 
 data NaturalData = Nat
 
-data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
+data TupleData = AnyTuple | NonEmptyTuple | HalfTuple | MicroTuple
 
 
 class DataGenerator a b | a -> b where
@@ -27,10 +27,10 @@ instance DataGenerator NaturalData Int where
     generator _ = elements [0 .. maxSize]
 
 instance DataGenerator TupleData String where
-    generator AnyTuple = listOf typeGen
+    generator AnyTuple = typeListGen
     generator NonEmptyTuple = listOf1 typeGen
-    generator HalfTuple = resize size $ listOf typeGen
-        where size = div maxSize 2
+    generator MicroTuple = resize 1 typeListGen
+    generator HalfTuple = resize (div maxSize 2) typeListGen
 
 
 maxSize :: Int
@@ -38,6 +38,9 @@ maxSize = 20
 
 typeGen :: Gen Char
 typeGen = elements types
+
+typeListGen :: Gen String
+typeListGen = listOf typeGen
 
 applyGen :: (MonadIO m) => Int -> Gen a -> m [a]
 applyGen n x = liftIO . apply $ vectorOf n x where
