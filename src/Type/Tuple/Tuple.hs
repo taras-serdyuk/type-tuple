@@ -57,3 +57,6 @@ instance (TupleList a a', L.Length a' b) => Length a b
 class Drop a b c | a b -> b
 instance (TupleList b b', TupleList c c', L.Drop a b' c') => Drop a b c
 
+
+class Reverse a b | a -> b
+instance (TupleList a a', TupleList b b', L.Reverse a' b') => Reverse a b

@@ -44,3 +44,6 @@ tests = do
     test 20 $ same "Length" length AnyTuple
     
     test 100 $ same "Drop" drop Nat AnyTuple
+
+    test 100 $ same "Reverse" reverse AnyTuple
+    

@@ -11,6 +11,7 @@ import System.Random
 
 
 data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
+
 data NatData = Nat
 
 
