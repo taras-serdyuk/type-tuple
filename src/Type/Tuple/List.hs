@@ -35,11 +35,6 @@ type List19 a b c d e f g h i j k l m n o p q r s = Cons a (List18 b c d e f g h
 type List20 a b c d e f g h i j k l m n o p q r s t = Cons a (List19 b c d e f g h i j k l m n o p q r s t)
 
 
-class List a
-instance List Nil
-instance (List b) => List (Cons a b)
-
-
 class Head a b | a -> b
 instance Head (Cons a b) a
 
@@ -63,6 +58,12 @@ instance Length Nil Zero
 instance (Length b c) => Length (Cons a b) (Succ c)
 
 
+class Take a b c | a b -> c
+instance Take Zero Nil Nil
+instance Take Zero a Nil
+instance Take a Nil Nil
+instance (Take a c d) => Take (Succ a) (Cons b c) (Cons b d)
+
 class Drop a b c | a b -> c
 instance Drop Zero Nil Nil
 instance Drop Zero a a
@@ -71,12 +72,10 @@ instance (Drop a c d) => Drop (Succ a) (Cons b c) d
 
 
 class Reverse a b | a -> b where
-
 instance Reverse Nil Nil
-instance (List b, List d, List e, Last (Cons a b) c, Init (Cons a b) e, Reverse e d) => Reverse (Cons a b) (Cons c d)
+instance (Last (Cons a b) c, Init (Cons a b) e, Reverse e d) => Reverse (Cons a b) (Cons c d)
 
 
 class Replicate a b c | a b -> c where
-
 instance Replicate Zero a Nil
 instance (Replicate a b c) => Replicate (Succ a) b (Cons b c)

@@ -10,9 +10,9 @@ import Type.Tuple.Test.Types
 import System.Random
 
 
-data ElemData = Elem
+data ElementData = Elem
 
-data NatData = Nat
+data NaturalData = Nat
 
 data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
 
@@ -20,10 +20,10 @@ data TupleData = AnyTuple | NonEmptyTuple | HalfTuple
 class DataGenerator a b | a -> b where
     generator :: a -> Gen b
 
-instance DataGenerator ElemData Char where
+instance DataGenerator ElementData Char where
     generator _ = typeGen
 
-instance DataGenerator NatData Int where
+instance DataGenerator NaturalData Int where
     generator _ = elements [0 .. maxSize]
 
 instance DataGenerator TupleData String where
