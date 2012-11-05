@@ -27,8 +27,3 @@ type Nat17 = Succ Nat16
 type Nat18 = Succ Nat17
 type Nat19 = Succ Nat18
 type Nat20 = Succ Nat19
-
-
-class Nat a
-instance Nat Zero
-instance Nat (Succ a)
